@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="major">
+        <item>교육학과</item>
+        <item>국어국문학과</item>
+        <item>영어영문학과</item>
+        <item>컴퓨터공학과</item>
+        <item>IT미디어공학과</item>
+        <item>바이오공학과</item>
+        <item>동양학과</item>
+        <item>서양학과</item>
+        <item>문헌정보학과</item>
+        <item>정보통계학과</item>
+        <item>회계학과</item>
+        <item>수학과</item>
+    </string-array>
+</resources>
