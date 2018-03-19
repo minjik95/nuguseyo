@@ -18,8 +18,8 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
     public ItemViewHolder(View itemView) {
         super(itemView);
 
-        isScrap = (CheckBox) itemView.findViewById(R.id.cb_scrap);
-        scrapCount = (TextView) itemView.findViewById(R.id.tv_scrapcount);
-        img = (ImageView) itemView.findViewById(R.id.iv_img);
+        isScrap = itemView.findViewById(R.id.cb_scrap);
+        scrapCount = itemView.findViewById(R.id.tv_scrapcount);
+        img = itemView.findViewById(R.id.iv_img);
     }
 }

@@ -30,7 +30,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_main);
 
-        TextView signUp = (TextView) findViewById(R.id.tv_signup);
+        TextView signUp = findViewById(R.id.tv_signup);
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -39,9 +39,9 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        idText = (EditText) findViewById(R.id.et_id);
-        passwordText = (EditText) findViewById(R.id.et_pw);
-        loginButton = (Button) findViewById(R.id.bt_login);
+        idText = findViewById(R.id.et_id);
+        passwordText = findViewById(R.id.et_pw);
+        loginButton = findViewById(R.id.bt_login);
         loginButton.setOnClickListener(new View.OnClickListener() {
 
             @Override

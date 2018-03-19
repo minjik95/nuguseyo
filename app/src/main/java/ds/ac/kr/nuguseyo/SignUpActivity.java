@@ -44,15 +44,15 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-        spinner = (Spinner) findViewById(R.id.sp_major);
+        spinner = findViewById(R.id.sp_major);
         adapter = ArrayAdapter.createFromResource(this, R.array.major, android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
 
-        idText = (EditText) findViewById(R.id.et_id);
-        passwordText = (EditText) findViewById(R.id.et_pw);
-        emailText = (EditText) findViewById(R.id.et_email);
+        idText = findViewById(R.id.et_id);
+        passwordText = findViewById(R.id.et_pw);
+        emailText = findViewById(R.id.et_email);
 
-        validateButton = (Button) findViewById(R.id.bt_validate);
+        validateButton = findViewById(R.id.bt_validate);
         validateButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -113,7 +113,7 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
 
-        signUpButton = (Button) findViewById(R.id.bt_signup);
+        signUpButton = findViewById(R.id.bt_signup);
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
