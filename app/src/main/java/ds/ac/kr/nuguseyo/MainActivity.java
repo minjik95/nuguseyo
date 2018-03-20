@@ -27,6 +27,9 @@ import java.util.Date;
 public class MainActivity extends AppCompatActivity {
 
     ArrayList<Item> listItems;
+
+    RecyclerView recyclerView;
+
     public String mCurrentPhotoPath;
 
     @Override
@@ -54,28 +57,30 @@ public class MainActivity extends AppCompatActivity {
         });
 
         listItems = new ArrayList<>();
+        recyclerView = findViewById(R.id.rv_list);
+
 
 //        for(int i = 0; i < 5; i++) {
 //            Item items = new Item(true, "123", "http://img.theqoo.net/img/IpAiy.gif");
 //            listItems.add(i, items);
 //        }
+//
+//        Item item = new Item(true, "125",
+//                "http://res.heraldm.com/content/image/2015/12/15/20151215000161_0.jpg");
+//        listItems.add(item);
+//
+//        Item item2 = new Item(true, "125",
+//                "http://img.tenasia.hankyung.com/webwp_kr/wp-content/uploads/2017/11/2017110720122915751.jpg");
+//        listItems.add(item2);
+//
+//        Item item3 = new Item(true, "125",
+//                "http://img.insight.co.kr/static/2017/12/24/700/ta07wn8fb2n2n7581oc9.jpg");
+//        listItems.add(item3);
 
-        Item item1 = new Item(true, "125",
-                "http://res.heraldm.com/content/image/2015/12/15/20151215000161_0.jpg");
-        listItems.add(item1);
-
-        Item item2 = new Item(true, "125",
-                "http://img.tenasia.hankyung.com/webwp_kr/wp-content/uploads/2017/11/2017110720122915751.jpg");
-        listItems.add(item2);
-
-        Item item3 = new Item(true, "125",
-                "http://img.insight.co.kr/static/2017/12/24/700/ta07wn8fb2n2n7581oc9.jpg");
-        listItems.add(item3);
-
-        RecyclerView recyclerView = findViewById(R.id.rv_list);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        ItemAdapter itemAdapter = new ItemAdapter(this, listItems);
-        recyclerView.setAdapter(itemAdapter);
+//        recyclerView = findViewById(R.id.rv_list);
+//        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+//        ItemAdapter itemAdapter = new ItemAdapter(this, listItems);
+//        recyclerView.setAdapter(itemAdapter);
     }
 
     public void requirePermission() {
@@ -131,6 +136,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Save a file: path for use with ACTION_VIEW intents
         mCurrentPhotoPath = image.getAbsolutePath();
+        Log.d("mCurrentPhotoPath", "뭘까???" + mCurrentPhotoPath);
         return image;
     }
 
@@ -139,8 +145,10 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if(requestCode == 10) {
-            Item item4 = new Item(true, "125", mCurrentPhotoPath);
-            listItems.add(item4);
+            listItems.add(new Item(true, "125", mCurrentPhotoPath));
+            recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+            ItemAdapter itemAdapter = new ItemAdapter(this, listItems);
+            recyclerView.setAdapter(itemAdapter);
         }
 
     }
