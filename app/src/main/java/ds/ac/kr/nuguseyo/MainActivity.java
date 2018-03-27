@@ -1,9 +1,11 @@
 package ds.ac.kr.nuguseyo;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
@@ -18,24 +20,46 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+
 public class MainActivity extends AppCompatActivity {
+
+    RecyclerView recyclerView;
+    ItemAdapter itemAdapter;
+
+    Uri photoUri;
 
     ArrayList<Item> listItems;
 
-    RecyclerView recyclerView;
-
-    public String mCurrentPhotoPath;
+    String timeStamp;
+    String imagePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        recyclerView = findViewById(R.id.rv_list);
+
+        listItems = new ArrayList<>();
+        imagePath = "http://minjik95.cafe24.com/";
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        itemAdapter = new ItemAdapter(this, listItems);
+        recyclerView.setAdapter(itemAdapter);
+
+        LoadDataFromServer();
 
         requirePermission();
 
@@ -55,32 +79,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
-        listItems = new ArrayList<>();
-        recyclerView = findViewById(R.id.rv_list);
-
-
-//        for(int i = 0; i < 5; i++) {
-//            Item items = new Item(true, "123", "http://img.theqoo.net/img/IpAiy.gif");
-//            listItems.add(i, items);
-//        }
-//
-//        Item item = new Item(true, "125",
-//                "http://res.heraldm.com/content/image/2015/12/15/20151215000161_0.jpg");
-//        listItems.add(item);
-//
-//        Item item2 = new Item(true, "125",
-//                "http://img.tenasia.hankyung.com/webwp_kr/wp-content/uploads/2017/11/2017110720122915751.jpg");
-//        listItems.add(item2);
-//
-//        Item item3 = new Item(true, "125",
-//                "http://img.insight.co.kr/static/2017/12/24/700/ta07wn8fb2n2n7581oc9.jpg");
-//        listItems.add(item3);
-
-//        recyclerView = findViewById(R.id.rv_list);
-//        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-//        ItemAdapter itemAdapter = new ItemAdapter(this, listItems);
-//        recyclerView.setAdapter(itemAdapter);
     }
 
     public void requirePermission() {
@@ -108,13 +106,12 @@ public class MainActivity extends AppCompatActivity {
             File photoFile = null;
             try {
                 photoFile = createImageFile();
-                //Log.d("photoFile", "photoFile은 " + photoFile);
             } catch (IOException e) {
-                //Log.d("error", "error는 " + e.getMessage());
+                Log.d("error", "error는 " + e.getMessage());
             }
 
             if(photoFile != null) {
-                Uri photoUri = FileProvider.getUriForFile(this,
+                photoUri = FileProvider.getUriForFile(this,
                                                         "ds.ac.kr.nuguseyo.fileprovider",
                                                         photoFile);
                 cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
@@ -125,31 +122,80 @@ public class MainActivity extends AppCompatActivity {
 
     private File createImageFile() throws IOException {
         // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_hhmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
+        timeStamp = new SimpleDateFormat("yyyyMMdd_hhmmss").format(new Date());
+        String imageFileName = timeStamp + "_";
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
                 imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
+                ".png",         /* suffix */
                 storageDir      /* directory */
         );
 
-        // Save a file: path for use with ACTION_VIEW intents
-        mCurrentPhotoPath = image.getAbsolutePath();
-        Log.d("mCurrentPhotoPath", "뭘까???" + mCurrentPhotoPath);
         return image;
     }
+
+    /**
+
+     photoUri : content://ds.ac.kr.nuguseyo.fileprovider/my_images/20180320_103606_396953548.png
+     mCurrentPhotoPath : /storage/emulated/0/Android/data/ds.ac.kr.nuguseyo/files/Pictures/20180325_025234_2093980949.png
+
+     **/
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == 10) {
-            listItems.add(new Item(true, "125", mCurrentPhotoPath));
-            recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-            ItemAdapter itemAdapter = new ItemAdapter(this, listItems);
-            recyclerView.setAdapter(itemAdapter);
+        if(requestCode == 10 && resultCode == Activity.RESULT_OK) {
+
+            Intent startIntent = new Intent(MainActivity.this, PostActivity.class);
+
+            startIntent.setData(photoUri);
+            startIntent.putExtra("imageName", timeStamp + ".png");
+
+            startActivity(startIntent);
         }
 
     }
+
+    private void LoadDataFromServer() {
+
+        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                OkHttpClient client = new OkHttpClient();
+                Request request = new Request.Builder()
+                        .url("http://minjik95.cafe24.com/MyData.php")
+                        .build();
+
+                try {
+                    okhttp3.Response response = client.newCall(request).execute();
+
+                    JSONArray array = new JSONArray(response.body().string());
+
+                    for(int i = 0; i < array.length(); i++) {
+                        JSONObject object = array.getJSONObject(i);
+
+                        Item items = new Item(true, "123",object.getString("path"), object.getString("content"));
+
+                        listItems.add(items);
+
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    Log.d("End of posts","End of posts");
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                itemAdapter.notifyDataSetChanged();
+            }
+        };
+
+        task.execute();
+    }
+
 }

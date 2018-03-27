@@ -1,11 +1,13 @@
 package ds.ac.kr.nuguseyo;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 
 /**
@@ -33,17 +35,19 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemViewHolder> {
     public void onBindViewHolder(ItemViewHolder holder, int position) {
         Item item = items.get(position);
 
-        //Glide.with(mContext).load(imgUrl).into(holder.img);
+        String imgUrl = "http://minjik95.cafe24.com/" + item.getImgUrl();
+        Log.d("imgUrl","" + imgUrl);
 
-        String imgUrl = item.getImgUrl();
-        holder.img.setImageBitmap(BitmapFactory.decodeFile(imgUrl));
-        holder.scrapCount.setText(String.valueOf(item.getScrapCount()));
+        holder.scrapCount.setText(item.getScrapCount());
+        Glide.with(mContext).load(imgUrl).into(holder.img);
+        holder.content.setText(item.getContent());
     }
 
     @Override
     public int getItemCount() {
         return items.size();
     }
+
 
 }
 
