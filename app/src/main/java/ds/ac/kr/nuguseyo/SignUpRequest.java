@@ -12,7 +12,7 @@ import java.util.Map;
 
 public class SignUpRequest extends StringRequest {
 
-    final static private String URL = "http://minjik95.cafe24.com/UserRegister.php";
+    final static private String URL = "http://minjik95.cafe24.com/UserRegister1.php";
     private Map<String, String> parameters;
 
     public SignUpRequest(String userID, String userPassword, String userMajor, String userEmail, Response.Listener listener) {
