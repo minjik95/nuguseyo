@@ -6,17 +6,59 @@ package ds.ac.kr.nuguseyo;
 
 public class Item {
 
+    public static class Scraps {
+        int count;
+        boolean userScraped;
+
+        public int getCount() {
+            return count;
+        }
+
+        public void setCount(int count) {
+            this.count = count;
+        }
+
+        public boolean isUserScraped() {
+            return userScraped;
+        }
+
+        public void setUserScraped(boolean userScraped) {
+            this.userScraped = userScraped;
+        }
+    }
+
+    int postId;
+    Scraps scrapCount;
+
     boolean isScrap;
 
-    String scrapCount;
+    String userId;
     String imgUrl;
     String content;
 
-    public Item(boolean isScrap, String scrapCount, String imgUrl, String content) {
+    public Item(int postId, boolean isScrap, String userId, String imgUrl, String content) {
+        this.postId = postId;
+        //this.scrapCount = scrapCount;
         this.isScrap = isScrap;
-        this.scrapCount = scrapCount;
+        this.userId = userId;
         this.imgUrl = imgUrl;
         this.content = content;
+    }
+
+    public int getPostId() {
+        return postId;
+    }
+
+    public void setPostId(int postId) {
+        this.postId = postId;
+    }
+
+    public Scraps getScrapCount() {
+        return scrapCount;
+    }
+
+    public void setScrapCount(Scraps scrapCount) {
+        this.scrapCount = scrapCount;
     }
 
     public boolean isScrap() {
@@ -27,12 +69,12 @@ public class Item {
         isScrap = scrap;
     }
 
-    public String getScrapCount() {
-        return scrapCount;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setScrapCount(String scrapCount) {
-        this.scrapCount = scrapCount;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getImgUrl() {

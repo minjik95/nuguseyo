@@ -35,12 +35,14 @@ public class PostActivity extends AppCompatActivity {
     private Bitmap bitmap;
     private Uri photoUri;
 
-    private String encoded_string, image_name, content;
+    private String encoded_string, image_name, content, scrap_count, userID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
+
+        scrap_count = "125";
 
         ivPost = findViewById(R.id.iv_post);
         etText = findViewById(R.id.et_text);
@@ -50,8 +52,6 @@ public class PostActivity extends AppCompatActivity {
             public void onClick(View view) {
                 content = etText.getText().toString();
                 new Encode_image().execute();
-
-                finish();
             }
         });
 
@@ -61,6 +61,7 @@ public class PostActivity extends AppCompatActivity {
         /** photoUri : content://ds.ac.kr.nuguseyo.fileprovider/my_images/20180320_103606_396953548.png **/
 
         image_name = intent.getExtras().getString("imageName");
+        userID = intent.getExtras().getString("userID");
         /** 20180320_103606_396953548.png **/
 
         Glide.with(this).load(photoUri).centerCrop().into(ivPost);
@@ -99,7 +100,6 @@ public class PostActivity extends AppCompatActivity {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             makeRequest();
-
         }
     }
 
@@ -122,6 +122,8 @@ public class PostActivity extends AppCompatActivity {
                 map.put("encoded_string", encoded_string);
                 map.put("image_name", image_name);
                 map.put("content", content);
+                map.put("scrap_count", scrap_count);
+                map.put("userID", userID);
 
                 return map;
             }

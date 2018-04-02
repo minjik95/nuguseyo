@@ -30,25 +30,34 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 
 public class MainActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
-    ItemAdapter itemAdapter;
+    public static ItemAdapter itemAdapter;
 
     Uri photoUri;
 
-    ArrayList<Item> listItems;
+    public static ArrayList<Item> listItems;
 
     String timeStamp;
     String imagePath;
 
+    String userID;
+
+    public static JSONArray array;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Intent intent = getIntent();
+        userID = intent.getExtras().getString("userID");
+        Log.d("userID는 ", "" + userID);
 
         recyclerView = findViewById(R.id.rv_list);
 
@@ -151,6 +160,7 @@ public class MainActivity extends AppCompatActivity {
 
             startIntent.setData(photoUri);
             startIntent.putExtra("imageName", timeStamp + ".png");
+            startIntent.putExtra("userID", userID);
 
             startActivity(startIntent);
         }
@@ -163,19 +173,24 @@ public class MainActivity extends AppCompatActivity {
             @Override
             protected Void doInBackground(Void... voids) {
                 OkHttpClient client = new OkHttpClient();
+                RequestBody requestBody = new FormBody.Builder()
+                        .add("userID", userID)
+                        .build();
+
                 Request request = new Request.Builder()
                         .url("http://minjik95.cafe24.com/MyData.php")
+                        .post(requestBody)
                         .build();
 
                 try {
                     okhttp3.Response response = client.newCall(request).execute();
 
-                    JSONArray array = new JSONArray(response.body().string());
+                    array = new JSONArray(response.body().string());
 
                     for(int i = 0; i < array.length(); i++) {
                         JSONObject object = array.getJSONObject(i);
 
-                        Item items = new Item(true, "123",object.getString("path"), object.getString("content"));
+                        Item items = new Item(object.getInt("id"), true, object.getString("userID"), object.getString("path"), object.getString("content"));
 
                         listItems.add(items);
 
