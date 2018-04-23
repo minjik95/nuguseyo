@@ -1,5 +1,7 @@
 package ds.ac.kr.nuguseyo;
 
+import android.util.Log;
+
 import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
 
@@ -16,6 +18,8 @@ public class LoginRequest extends StringRequest {
         parameters = new HashMap<>();
         parameters.put("userID", userID);
         parameters.put("userPassword", userPassword);
+
+        Log.d("parameters","" + parameters);
 
     }
 

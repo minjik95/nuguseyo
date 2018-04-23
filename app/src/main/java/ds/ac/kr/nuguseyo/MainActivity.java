@@ -18,6 +18,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -38,18 +41,18 @@ import okhttp3.RequestBody;
 public class MainActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
-    public static ItemAdapter itemAdapter;
+    ItemAdapter itemAdapter;
 
     Uri photoUri;
 
-    public static ArrayList<Item> listItems;
+    ArrayList<Item> listItems;
 
     String timeStamp;
     String imagePath;
 
     String userID;
 
-    public static JSONArray array;
+    JSONArray array;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +63,8 @@ public class MainActivity extends AppCompatActivity {
         Log.d("userID는 ", "" + userID);
 
         recyclerView = findViewById(R.id.rv_list);
+
+        FloatingActionButton fabButton = findViewById(R.id.fab_button);
 
         listItems = new ArrayList<>();
         imagePath = "http://minjik95.cafe24.com/";
@@ -72,7 +77,6 @@ public class MainActivity extends AppCompatActivity {
 
         requirePermission();
 
-        FloatingActionButton fabButton = findViewById(R.id.fab_button);
         fabButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
